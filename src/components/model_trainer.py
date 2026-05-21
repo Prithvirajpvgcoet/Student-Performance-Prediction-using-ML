@@ -46,7 +46,53 @@ class ModelTrainer:
                 "XGBoost": XGBRegressor(),
                 "CatBoost": CatBoostRegressor(verbose=False)
             }
-            model_report:dict=evaluate_models(X_train=X_train,y_train=y_train,X_test=X_test,y_test=y_test,models=models)
+            params={
+                "Decision Tree": {
+                    'criterion': ['squared_error', 'friedman_mse', 'absolute_error', 'poisson'],
+                    'splitter': ['best', 'random'],
+                    'max_depth': [None, 10, 20, 30, 40, 50],
+                },
+                "Random Forest": {
+                    'n_estimators': [50, 100, 200],
+                    'criterion': ['squared_error', 'friedman_mse', 'absolute_error', 'poisson'],
+                    'max_depth': [None, 10, 20, 30, 40, 50],
+                },
+                "Gradient Boosting": {
+                    'learning_rate': [0.01, 0.1, 0.2],
+                    'n_estimators': [50, 100, 200],
+                    'max_depth': [3, 4, 5]
+                },
+                "AdaBoost": {
+                    'n_estimators': [50, 100, 200],
+                    'learning_rate': [0.01, 0.1, 0.2]
+                },
+                "K-Nearest Neighbors": {
+                    'n_neighbors': [3, 5, 7, 9],
+                    'weights': ['uniform', 'distance']
+                },
+                "Linear Regression": {
+                    'fit_intercept': [True, False]
+                },
+                "Ridge": {
+                    'alpha': [0.1, 1.0, 10.0],
+                    'fit_intercept': [True, False]
+                },
+                "Lasso": {
+                    'alpha': [0.1, 1.0, 10.0],
+                    'fit_intercept': [True, False]
+                },
+                "XGBoost": {
+                    'learning_rate': [0.01, 0.1, 0.2],
+                    'n_estimators': [50, 100, 200],
+                    'max_depth': [3, 4, 5]
+                },
+                "CatBoost": {
+                    'learning_rate': [0.01, 0.1, 0.2],
+                    'n_estimators': [50, 100, 200],
+                    'depth': [3, 4, 5]
+                }
+            }
+            model_report:dict=evaluate_models(X_train=X_train,y_train=y_train,X_test=X_test,y_test=y_test,models=models,param=params)
 
             best_model_score=max(sorted(model_report.values()))
             best_model_name=list(model_report.keys())[
